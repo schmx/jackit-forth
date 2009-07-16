@@ -98,7 +98,7 @@ s" output" c-string output-port-name
 			." Cannoct connect output ports" bye
 		then
 	then
-		free
+	free
 ;
 : connect-output-port  ( -- )
 	jack-client 0 0 JackPortIsPhysical JackPortIsoutput or jack-get-ports dup dup 0= if
@@ -109,7 +109,7 @@ s" output" c-string output-port-name
 		else
 		then
 	then
-		free
+	free
 ;
 : sleep&die  ( -- )
 	10000 ms jack-client jack-client-close bye
