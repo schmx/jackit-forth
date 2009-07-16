@@ -54,9 +54,23 @@ s" simple gforth client" jack-client-name jnc
 	rot *audio-sample-size move			\ memcpy(out, in, ...)
 	0
 ;
-
+: jack-shutdown  ( a -- )
+	\ This is the shutdown callback for this JACK application.
+	\ It is called by JACK if the server ever shuts down or
+	\ decides to disconnect the client.
+	bye
+;
 : client-open  ( -- n )
 	jnc 0 0 jack-client-open
+;
+: setup-callbacks  ( -- )
+	\ Tell the JACK server to call `PROCESS´ whenever
+	\ there is work to be done.
+	jack-client ' process 0 jack-set-process-callback
+	\ Tell the JACK server to call `JACK-SHUTDOWN´ if
+	\ it ever shuts down, either entirely, or if it
+	\ just decides to stop calling us.
+	jack-client ' jack-shutdown 0 jack-on-shutdown
 ;
 : jackit  ( -- )
 	\ Try to become a client of the JACK server
@@ -64,8 +78,6 @@ s" simple gforth client" jack-client-name jnc
 	jack-client 0= if
 		." connecting to jack server failed" bye
 	else
-		\ Tell the JACK server to call 'PROCESS' whenever
-		\ there is work to be done.
-		jack-client ' process 0 jack-set-process-callback
+		setup-callbacks
 	then
 ;
