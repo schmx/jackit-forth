@@ -60,6 +60,10 @@ s" simple gforth client" jack-client-name jnc
 	\ decides to disconnect the client.
 	bye
 ;
+: .sample-rate  ( -- )
+	\ Display the current sample rate.
+	." Engine sample rate: " jack-client jack-get-sample-rate .
+;
 : client-open  ( -- n )
 	jnc 0 0 jack-client-open
 ;
@@ -78,6 +82,9 @@ s" simple gforth client" jack-client-name jnc
 	jack-client 0= if
 		." connecting to jack server failed" bye
 	else
+		\ Setup the callbacks
 		setup-callbacks
+		\ Display the current sample rate
+		.sample-rate
 	then
 ;
