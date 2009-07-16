@@ -21,38 +21,47 @@
 \ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 \ SUCH DAMAGE.
 
-s" jack" add-lib
-\c #include <jack/jack.h>
+( --------------
+  - This is a very simple client that demonstrates the basic
+  - features of JACK.
+  - Also it is a blatant ripoff of 
+  - http://jackit.sourceforge.net/cgi-bin/lxr/http/source/example-clients/simple_client.c
+  -------------- )
 
-\ See jack API documentation.
-c-function jack-client-open jack_client_open a n a -- a
-	\ TODO This baby takes optional arguments. To be added later.
-c-function jack-set-process-callback jack_set_process_callback a a n -- n
+include jack.fs
 
-c-function jack-port-get-buffer jack_port_get_buffer a n -- a
-							\ void* -- jack_port_t* jack_nframes_t
+variable input-port
+variable output-port
+0 value jack-client
 
-0x00	constant	JackNullOption
-0x01	constant	JackNoStartServer
-0x02	constant	JackUseExactName
-0x04	constant	JackServerName
-0x08	constant	JackLoadName
-0x10	constant	JackLoadInit
+s" simple gforth client" jack-client-name jnc
 
-: null-terminate  ( u c-addr -- )
-	+ 0 swap c!
+: process  ( n a -- n )
+	\ TODO This needs to be using lib.fs
+	\ The process callback for this JACK application.
+	\ It is called by JACK at the appropriate times.
+	drop				\ void *arg
+	dup	dup				\ nframes
+	inpu-port swap jack-port-get-buffer
+	swap				\ in
+	output-port swap jack-port-get-buffer
+	\ sizeof(jack_default_audio_sample_t) hopefully == 4
+	rot 2 lshift move			\ memcpy(out, in, ...)
+	0
 ;
-: jack-client-name
-	\ Set up a word useable for jack-client-open.
-	\
-	\ Example:
-	\	s" foobar" jack-client-name jnc
-	\	jnc 0 0 jack-client-open
-	\
-	\ TODO Add some error checking for allocate.
-	\      Alternatively change it to a normal allot.
-	create ( c-addr u -- )  dup 1+ allocate drop dup , 
-							2dup null-terminate
-							swap move
-	does>  ( -- a ) @
-; 
+	
+
+: client-open  ( -- n )
+	jnc 0 0 jack-client-open
+;
+: jackit  ( -- )
+	\ Try to become a client of the JACK server
+	client-open to jack-client
+	jack-client 0= if
+		." connecting to jack server failed" bye
+	else
+		\ Tell the JACK server to call 'PROCESS' whenever
+		\ there is work to be done.
+		jack-client ' process 0 jack-set-process-callback
+	then
+;
