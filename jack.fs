@@ -30,7 +30,9 @@ c-function jack-client-open jack_client_open a n a -- a
 c-function jack-set-process-callback jack_set_process_callback a a n -- n
 
 c-function jack-port-get-buffer jack_port_get_buffer a n -- a
-							\ void* -- jack_port_t* jack_nframes_t
+		\ void* -- jack_port_t* jack_nframes_t
+c-function jack-on-shutdown a a a -- void
+		\ jack_client_t* void(*)(void *arg) void * -- void
 
 0x00	constant	JackNullOption
 0x01	constant	JackNoStartServer
