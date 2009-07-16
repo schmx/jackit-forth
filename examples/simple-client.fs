@@ -90,6 +90,34 @@ s" output" c-string output-port-name
 	else
 	then
 ;
+: connect-input-port  ( -- )
+	jack-client 0 0 JackPortIsPhysical JackPortIsInput or 0= dup dup if
+		." Cannot find any physical playback ports" bye
+	else
+		jack-client output-port jack-port-name rot @ jack-connect 0= not if
+			." Cannoct connect output ports" bye
+		then
+	then
+		free
+;
+: connect-output-port  ( -- )
+	jack-client 0 0 JackPortIsPhysical JackPortIsoutput or jack-get-ports dup dup 0= if
+		." Cannot find any physical capture ports" bye
+	else
+		jack-client swap @ input-port jack-port-name jack-connect 0= not if
+			." Cannot connect input ports" bye
+		else
+		then
+	then
+		free
+;
+: sleep&die  ( -- )
+	10000 ms jack-client jack-client-close bye
+;
+: connect-ports  ( -- )
+	connect-output-port
+	connect-input-port 
+;
 : jackit  ( -- )
 	\ Try to become a client of the JACK server
 	client-open to jack-client
@@ -103,5 +131,9 @@ s" output" c-string output-port-name
 		\ Create input & output ports
 		register-them-ports
 		activate-client
+		\ Connect up the output and input ports to the world
+		connect-ports
+		\ SLEEP and F^WDIE
+		sleep&die
 	then
 ;
