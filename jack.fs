@@ -37,6 +37,8 @@ c-function jack-get-sample-rate jack_get_sample_rate a -- n
 		\ jack_client_t* -- jack_nframes_t
 c-function jack-port-register jack_port_register a a a n n -- a
 		\ jack_client_t* char* char* ulong ulong -- jack_port_t*
+c-function jack-activate jack_activate a -- n
+		\ jack_client_t* -- int
 
 include jack-types.fs
 
