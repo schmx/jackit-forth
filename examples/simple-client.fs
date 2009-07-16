@@ -30,8 +30,8 @@
 
 include jack.fs
 
-variable input-port
-variable output-port
+0 value input-port
+0 value output-port
 0 value jack-client
 
 s" simple gforth client" c-string jnc
@@ -47,6 +47,7 @@ s" output" c-string output-port-name
 	\ TODO This needs to be using lib.fs
 	\ The process callback for this JACK application.
 	\ It is called by JACK at the appropriate times.
+	bye
 	drop				\ void *arg
 	dup	dup				\ nframes
 	input-port swap jack-port-get-buffer
@@ -69,10 +70,10 @@ s" output" c-string output-port-name
 	jnc 0 0 jack-client-open
 ;
 : setup-callbacks  ( -- )
-	\ Tell the JACK server to call `PROCESS´ whenever
+	\ Tell the JACK server to call PROCESS whenever
 	\ there is work to be done.
-	jack-client ' process 0 jack-set-process-callback
-	\ Tell the JACK server to call `JACK-SHUTDOWN´ if
+	jack-client ' process 0 jack-set-process-callback drop
+	\ Tell the JACK server to call JACK-SHUTDOWN if
 	\ it ever shuts down, either entirely, or if it
 	\ just decides to stop calling us.
 	jack-client ' jack-shutdown 0 jack-on-shutdown
@@ -80,9 +81,9 @@ s" output" c-string output-port-name
 : register-them-ports  ( -- )
 	\ Create the two ports.
 	jack-client input-port-name jack-default-audio-type jackportisinput 0
-		jack-port-register
+		jack-port-register to input-port
 	jack-client output-port-name jack-default-audio-type jackportisoutput 0
-		jack-port-register	
+		jack-port-register to output-port
 ;
 : activate-client ( -- )
 	jack-client jack-activate 0= invert if
@@ -91,11 +92,11 @@ s" output" c-string output-port-name
 	then
 ;
 : connect-input-port  ( -- )
-	jack-client 0 0 JackPortIsPhysical JackPortIsInput or 0= dup dup if
+	jack-client 0 0 JackPortIsPhysical JackPortIsInput jack-get-ports or 0= dup dup if
 		." Cannot find any physical playback ports" bye
 	else
 		jack-client output-port jack-port-name rot @ jack-connect 0= invert if
-			." Cannoct connect output ports" bye
+			." Cannot connect output ports" bye
 		then
 	then
 	free

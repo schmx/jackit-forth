@@ -31,10 +31,10 @@ c-function jack-client-open jack_client_open a n a -- a
 	\ TODO This baby takes optional arguments. To be added later.
 c-function jack-connect jack_connect a a a -- n
 		\ jack_client_t* char* char* -- n
-c-function jack-set-process-callback jack_set_process_callback a a n -- n
+c-function jack-set-process-callback jack_set_process_callback a a a -- n
 c-function jack-port-get-buffer jack_port_get_buffer a n -- a
 		\ void* -- jack_port_t* jack_nframes_t
-c-function jack-on-shutdown a a a -- void
+c-function jack-on-shutdown jack_on_shutdown a a a -- void
 		\ jack_client_t* void(*)(void *arg) void * -- void
 c-function jack-get-ports jack_get_ports a a a n -- a
 		\ jack_client_t* char* char* ulong -- char**
