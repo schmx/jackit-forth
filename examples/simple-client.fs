@@ -85,7 +85,7 @@ s" output" c-string output-port-name
 		jack-port-register	
 ;
 : activate-client ( -- )
-	jack-client jack-activate 0= not if
+	jack-client jack-activate 0= invert if
 		." jack-activate failed" bye
 	else
 	then
@@ -94,7 +94,7 @@ s" output" c-string output-port-name
 	jack-client 0 0 JackPortIsPhysical JackPortIsInput or 0= dup dup if
 		." Cannot find any physical playback ports" bye
 	else
-		jack-client output-port jack-port-name rot @ jack-connect 0= not if
+		jack-client output-port jack-port-name rot @ jack-connect 0= invert if
 			." Cannoct connect output ports" bye
 		then
 	then
@@ -104,7 +104,7 @@ s" output" c-string output-port-name
 	jack-client 0 0 JackPortIsPhysical JackPortIsoutput or jack-get-ports dup dup 0= if
 		." Cannot find any physical capture ports" bye
 	else
-		jack-client swap @ input-port jack-port-name jack-connect 0= not if
+		jack-client swap @ input-port jack-port-name jack-connect 0= invert if
 			." Cannot connect input ports" bye
 		else
 		then
