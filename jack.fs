@@ -38,6 +38,8 @@ c-function jack-get-sample-rate jack_get_sample_rate a -- n
 c-function jack-port-register jack_port_register a a a n n -- a
 		\ jack_client_t* char* char* ulong ulong -- jack_port_t*
 
+include jack-types.fs
+
 0x00	constant	JackNullOption
 0x01	constant	JackNoStartServer
 0x02	constant	JackUseExactName
@@ -45,20 +47,3 @@ c-function jack-port-register jack_port_register a a a n n -- a
 0x08	constant	JackLoadName
 0x10	constant	JackLoadInit
 
-: null-terminate  ( u c-addr -- )
-	+ 0 swap c!
-;
-: jack-client-name
-	\ Set up a word useable for jack-client-open.
-	\
-	\ Example:
-	\	s" foobar" jack-client-name jnc
-	\	jnc 0 0 jack-client-open
-	\
-	\ TODO Add some error checking for allocate.
-	\      Alternatively change it to a normal allot.
-	create ( c-addr u -- )  dup 1+ allocate drop dup , 
-							2dup null-terminate
-							swap move
-	does>  ( -- a ) @
-; 
