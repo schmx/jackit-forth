@@ -25,6 +25,8 @@ s" jack" add-lib
 \c #include <jack/jack.h>
 
 \ See jack API documentation.
+c-function jack-client-close jack_client_close a -- n
+		\ jack_client_t* -- n
 c-function jack-client-open jack_client_open a n a -- a
 	\ TODO This baby takes optional arguments. To be added later.
 c-function jack-connect jack_connect a a a -- n
