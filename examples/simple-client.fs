@@ -35,7 +35,8 @@ variable output-port
 0 value jack-client
 
 s" simple gforth client" c-string jnc
-
+s" input" c-string input-port-name
+s" output" c-string output-port-name
 
 : *audio-sample-size  ( n -- n )
 	\ sizeof(jack_default_audio_sample_t) == 4 for me
@@ -76,6 +77,13 @@ s" simple gforth client" c-string jnc
 	\ just decides to stop calling us.
 	jack-client ' jack-shutdown 0 jack-on-shutdown
 ;
+: register-them-ports  ( -- )
+	\ Create the two ports.
+	jack-client input-port-name jack-default-audio-type jackportisinput 0
+		jack-port-register
+	jack-client output-port-name jack-default-audio-type jackportisoutput 0
+		jack-port-register	
+;
 : jackit  ( -- )
 	\ Try to become a client of the JACK server
 	client-open to jack-client
@@ -86,5 +94,7 @@ s" simple gforth client" c-string jnc
 		setup-callbacks
 		\ Display the current sample rate
 		.sample-rate
+		\ Create input & output ports
+		register-them-ports
 	then
 ;
