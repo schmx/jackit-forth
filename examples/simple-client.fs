@@ -84,6 +84,12 @@ s" output" c-string output-port-name
 	jack-client output-port-name jack-default-audio-type jackportisoutput 0
 		jack-port-register	
 ;
+: activate-client ( -- )
+	jack-client jack-activate 0= not if
+		." jack-activate failed" bye
+	else
+	then
+;
 : jackit  ( -- )
 	\ Try to become a client of the JACK server
 	client-open to jack-client
@@ -96,5 +102,6 @@ s" output" c-string output-port-name
 		.sample-rate
 		\ Create input & output ports
 		register-them-ports
+		activate-client
 	then
 ;
