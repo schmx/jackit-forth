@@ -40,10 +40,3 @@ c-function jack-port-register jack_port_register a a a n n -- a
 
 include jack-types.fs
 
-0x00	constant	JackNullOption
-0x01	constant	JackNoStartServer
-0x02	constant	JackUseExactName
-0x04	constant	JackServerName
-0x08	constant	JackLoadName
-0x10	constant	JackLoadInit
-

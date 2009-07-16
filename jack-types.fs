@@ -33,3 +33,12 @@
 
 s" 32 bit float mono audio" c-string jack-default-audio-type
 
+
+0x00	constant	JackNullOption
+0x01	constant	JackNoStartServer
+0x02	constant	JackUseExactName
+0x04	constant	JackServerName
+0x08	constant	JackLoadName
+0x10	constant	JackLoadInit
+
+
