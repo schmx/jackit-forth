@@ -31,5 +31,5 @@
 	does>  ( -- a ) @
 ;
 
-."32 bit float mono audio" c-string jack-default-audio-type
+s" 32 bit float mono audio" c-string jack-default-audio-type
 
