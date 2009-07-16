@@ -36,20 +36,24 @@ variable output-port
 
 s" simple gforth client" jack-client-name jnc
 
+
+: *audio-sample-size  ( n -- n )
+	\ sizeof(jack_default_audio_sample_t) == 4 for me
+	\ change it if needed.
+	2 lshift
+;
 : process  ( n a -- n )
 	\ TODO This needs to be using lib.fs
 	\ The process callback for this JACK application.
 	\ It is called by JACK at the appropriate times.
 	drop				\ void *arg
 	dup	dup				\ nframes
-	inpu-port swap jack-port-get-buffer
+	input-port swap jack-port-get-buffer
 	swap				\ in
 	output-port swap jack-port-get-buffer
-	\ sizeof(jack_default_audio_sample_t) hopefully == 4
-	rot 2 lshift move			\ memcpy(out, in, ...)
+	rot *audio-sample-size move			\ memcpy(out, in, ...)
 	0
 ;
-	
 
 : client-open  ( -- n )
 	jnc 0 0 jack-client-open
