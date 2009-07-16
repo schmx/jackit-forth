@@ -33,12 +33,15 @@ c-function jack-port-get-buffer jack_port_get_buffer a n -- a
 		\ void* -- jack_port_t* jack_nframes_t
 c-function jack-on-shutdown a a a -- void
 		\ jack_client_t* void(*)(void *arg) void * -- void
+c-function jack-get-ports jack_get_ports a a a n -- a
+		\ jack_client_t* char* char* ulong -- char**
 c-function jack-get-sample-rate jack_get_sample_rate a -- n
 		\ jack_client_t* -- jack_nframes_t
 c-function jack-port-register jack_port_register a a a n n -- a
 		\ jack_client_t* char* char* ulong ulong -- jack_port_t*
 c-function jack-activate jack_activate a -- n
 		\ jack_client_t* -- int
+
 
 include jack-types.fs
 
