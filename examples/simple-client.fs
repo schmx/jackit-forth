@@ -34,7 +34,7 @@ variable input-port
 variable output-port
 0 value jack-client
 
-s" simple gforth client" jack-client-name jnc
+s" simple gforth client" c-string jnc
 
 
 : *audio-sample-size  ( n -- n )
