@@ -27,8 +27,9 @@ s" jack" add-lib
 \ See jack API documentation.
 c-function jack-client-open jack_client_open a n a -- a
 	\ TODO This baby takes optional arguments. To be added later.
+c-function jack-connect jack_connect a a a -- n
+		\ jack_client_t* char* char* -- n
 c-function jack-set-process-callback jack_set_process_callback a a n -- n
-
 c-function jack-port-get-buffer jack_port_get_buffer a n -- a
 		\ void* -- jack_port_t* jack_nframes_t
 c-function jack-on-shutdown a a a -- void
