@@ -41,4 +41,9 @@ s" 32 bit float mono audio" c-string jack-default-audio-type
 0x08	constant	JackLoadName
 0x10	constant	JackLoadInit
 
+0x01	constant	JackPortIsInput
+0x02	constant	JackPortIsOutput
+0x04	constant	JackPortIsPhysical
+0x08	constant	JackPortCanMonitor
+0x10	constant	JackPortIsTerminal
 
